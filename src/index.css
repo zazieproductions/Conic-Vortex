@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Rubik+Glitch&family=Nosifer&family=Eater&family=Metal+Mania&family=Creepster&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-fraktur: 'UnifrakturMaguntia', serif;
+  --font-glitch: 'Rubik Glitch', system-ui;
+  --font-drip: 'Nosifer', serif;
+  --font-eaten: 'Eater', serif;
+  --font-metal: 'Metal Mania', serif;
+  --font-creep: 'Creepster', serif;
+}
+
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  cursor: crosshair;
+  user-select: none;
+}
+
+/* ------------------ STROBE BACKGROUND ------------------ */
+.strobe-bg {
+  animation: strobe 1.4s steps(1) infinite;
+}
+@keyframes strobe {
+  0%   { background: #ff0033; }
+  14%  { background: #00ff44; }
+  28%  { background: #2200ff; }
+  42%  { background: #ffee00; }
+  56%  { background: #ff00ee; }
+  70%  { background: #00ffee; }
+  84%  { background: #7700ff; }
+  100% { background: #ff5500; }
+}
+
+.checker-bg {
+  background-image:
+    repeating-conic-gradient(#000 0% 25%, transparent 0% 50%);
+  background-size: 60px 60px;
+  animation: checkerScroll 2s linear infinite, hueSpin 3s linear infinite;
+  opacity: 0.35;
+}
+@keyframes checkerScroll {
+  from { background-position: 0 0; }
+  to   { background-position: 120px 60px; }
+}
+
+.spiral-bg {
+  background: conic-gradient(from 0deg,
+    #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+  animation: spinFast 1.6s linear infinite;
+  mix-blend-mode: difference;
+  border-radius: 50%;
+}
+
+@keyframes hueSpin {
+  from { filter: hue-rotate(0deg); }
+  to   { filter: hue-rotate(360deg); }
+}
+@keyframes spinFast {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes spinRev {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+}
+
+/* ------------------ FLASH OVERLAY ------------------ */
+.flash-overlay {
+  animation: bigFlash 3.7s steps(1) infinite;
+  pointer-events: none;
+}
+@keyframes bigFlash {
+  0%, 91%  { opacity: 0; background: #fff; }
+  92%      { opacity: 0.9; background: #fff; }
+  93%      { opacity: 0; }
+  96%      { opacity: 0.85; background: #ff0000; }
+  97%      { opacity: 0; }
+  99%      { opacity: 0.8; background: #00ff00; }
+  100%     { opacity: 0; }
+}
+
+/* ------------------ MARQUEE ------------------ */
+.marquee-strip {
+  position: fixed;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.marquee-inner {
+  display: inline-block;
+  animation: marqueeMove linear infinite;
+  will-change: transform;
+}
+@keyframes marqueeMove {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ------------------ TEXT FX ------------------ */
+.blinker { animation: blinkHard 0.5s steps(1) infinite; }
+@keyframes blinkHard {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.rainbow-text {
+  animation: rainbowText 0.8s linear infinite;
+}
+@keyframes rainbowText {
+  0%   { color: #ff0000; text-shadow: 4px 4px 0 #00ffff; }
+  20%  { color: #ffff00; text-shadow: -4px 4px 0 #ff00ff; }
+  40%  { color: #00ff00; text-shadow: 4px -4px 0 #ff0000; }
+  60%  { color: #00ffff; text-shadow: -4px -4px 0 #ffff00; }
+  80%  { color: #0000ff; text-shadow: 6px 0 0 #00ff00; }
+  100% { color: #ff00ff; text-shadow: 0 6px 0 #0000ff; }
+}
+
+.shake-hard { animation: shakeHard 0.12s linear infinite; }
+@keyframes shakeHard {
+  0%   { transform: translate(0, 0) rotate(-1deg); }
+  25%  { transform: translate(-6px, 4px) rotate(1.5deg); }
+  50%  { transform: translate(5px, -5px) rotate(-2deg); }
+  75%  { transform: translate(-4px, -3px) rotate(2deg); }
+  100% { transform: translate(6px, 5px) rotate(-1.5deg); }
+}
+
+.glitch-clip {
+  animation: glitchClip 0.9s steps(2) infinite;
+}
+@keyframes glitchClip {
+  0%   { clip-path: inset(0 0 0 0); transform: skewX(0deg); }
+  20%  { clip-path: inset(20% 0 40% 0); transform: skewX(15deg) translateX(-10px); }
+  40%  { clip-path: inset(60% 0 5% 0); transform: skewX(-20deg) translateX(12px); }
+  60%  { clip-path: inset(5% 0 70% 0); transform: skewX(10deg); }
+  80%  { clip-path: inset(40% 0 20% 0); transform: skewX(-12deg) translateX(-8px); }
+  100% { clip-path: inset(0 0 0 0); transform: skewX(0deg); }
+}
+
+.zoom-pulse { animation: zoomPulse 0.7s ease-in-out infinite alternate; }
+@keyframes zoomPulse {
+  from { transform: scale(0.9) rotate(-3deg); }
+  to   { transform: scale(1.25) rotate(3deg); }
+}
+
+.wobble-slow { animation: wobbleSlow 4s ease-in-out infinite; }
+@keyframes wobbleSlow {
+  0%, 100% { transform: rotate(-8deg) scale(1); }
+  50%      { transform: rotate(8deg) scale(1.15); }
+}
+
+/* ------------------ CURSOR TRAIL ------------------ */
+.trail-bit {
+  position: fixed;
+  pointer-events: none;
+  animation: trailFade 0.9s ease-out forwards;
+  z-index: 90;
+}
+@keyframes trailFade {
+  0%   { opacity: 1; transform: scale(0.5) rotate(0deg); }
+  100% { opacity: 0; transform: scale(3) rotate(360deg); }
+}
+
+/* ------------------ POPUPS ------------------ */
+.popup-window {
+  animation: popIn 0.25s cubic-bezier(0.2, 2.5, 0.4, 1) both, shakeTiny 0.3s linear infinite 0.3s;
+  box-shadow: 8px 8px 0 rgba(0,0,0,0.8), 0 0 40px currentColor;
+}
+@keyframes popIn {
+  from { transform: scale(0) rotate(-30deg); }
+  to   { transform: scale(1) rotate(0deg); }
+}
+@keyframes shakeTiny {
+  0%   { transform: translate(0,0) rotate(-0.5deg); }
+  50%  { transform: translate(2px,-2px) rotate(0.5deg); }
+  100% { transform: translate(-2px,2px) rotate(-0.5deg); }
+}
+
+/* ------------------ SYMBOL STORM ------------------ */
+.storm-symbol {
+  position: fixed;
+  pointer-events: none;
+  transition: top 0.3s steps(3), left 0.3s steps(3);
+  will-change: transform;
+}
+
+/* ------------------ MISC ------------------ */
+.invert-world { filter: invert(1) hue-rotate(90deg) saturate(3); }
+
+.giant-sigil {
+  position: fixed;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  will-change: transform;
+}
+
+.vhs-lines {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0,0,0,0.35) 0px,
+    rgba(0,0,0,0.35) 2px,
+    transparent 2px,
+    transparent 5px
+  );
+  pointer-events: none;
+  animation: vhsRoll 0.4s linear infinite;
+}
+@keyframes vhsRoll {
+  from { background-position: 0 0; }
+  to   { background-position: 0 10px; }
+}
+
+.warning-border {
+  border-image: repeating-linear-gradient(45deg, #ff0 0 20px, #000 20px 40px) 12;
+}
+
+@keyframes floatDrift {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-30px) rotate(180deg); }
+}
+.drift { animation: floatDrift 3s ease-in-out infinite; }
