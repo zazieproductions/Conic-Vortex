@@ -1,6 +1,6 @@
 let ctx: AudioContext | null = null;
 let muted = false;
-let droneNodes: { osc: OscillatorNode; gain: GainNode }[] = [];
+const droneNodes: { osc: OscillatorNode; gain: GainNode }[] = [];
 
 export function initAudio() {
   if (!ctx) {
