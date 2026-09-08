@@ -1,0 +1,19 @@
+# Tooling / generated files — never auto-format
+dist/
+node_modules/
+coverage/
+package-lock.json
+pnpm-lock.yaml
+
+# index.html carries a long-lived injected runtime harness (source tagging,
+# element editing) whose inline scripts must remain byte-stable.
+index.html
+
+# Static assets (binary or no inferable text parser)
+docs/images/
+public/
+src/assets/sprites/*.svg
+
+# Source-control-private / generated artifacts
+*.tsbuildinfo
+.vite/

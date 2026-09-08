@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Radiant occult sun: core disc, alternating rays, and a counter-rotating
+       sigil ring so it reads as alive under hue-rotation and blend modes. -->
+  <g fill="none" stroke-linecap="round">
+    <!-- Straight rays -->
+    <g stroke="#ffff00" stroke-width="16">
+      <path d="M256 12 L256 60 M256 452 L256 500"/>
+      <path d="M90 90 L124 124 M388 388 L422 422"/>
+      <path d="M12 256 L60 256 M452 256 L500 256"/>
+      <path d="M90 422 L124 388 M388 124 L422 90"/>
+    </g>
+    <!-- Wavy rays (read as flame/radiance) -->
+    <g stroke="#ff00ff" stroke-width="12">
+      <path d="M148 44 q8 12 -4 22 q-12 10 2 24"/>
+      <path d="M366 44 q6 12 -6 22 q-10 10 4 24"/>
+      <path d="M44 154 q12 6 18 -4 q8 -12 24 -2"/>
+      <path d="M44 364 q12 -4 18 6 q8 12 24 2"/>
+      <path d="M368 408 q8 8 -2 18 q-10 8 2 22"/>
+      <path d="M146 410 q6 8 -6 16 q-10 6 4 20"/>
+    </g>
+    <!-- Core -->
+    <circle cx="256" cy="256" r="150" fill="#ffffff" opacity="0.15"/>
+    <circle cx="256" cy="256" r="124" stroke="#ffffff" stroke-width="10"/>
+    <circle cx="256" cy="256" r="86" stroke="#ff8800" stroke-width="8"/>
+    <!-- Inner conic spiral -->
+    <path d="M256 170 a86 86 0 0 1 86 86 a86 86 0 0 1 -60 82"
+          stroke="#ff0000" stroke-width="9"/>
+    <circle cx="256" cy="256" r="24" fill="#ffff00"/>
+  </g>
+</svg>

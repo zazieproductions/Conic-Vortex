@@ -1,73 +1,95 @@
 #!/usr/bin/env -S node --input-type=module
-import puppeteer from 'puppeteer';
+/**
+ * capture-screenshots.mjs
+ *
+ * Drives a headless browser through the running app and captures the README /
+ * portfolio screenshots into docs/images/.
+ *
+ * Puppeteer is intentionally NOT a default dependency (it would force a ~300MB
+ * Chromium download on every `npm install`). Install it once, on demand:
+ *
+ *   npm install -D puppeteer
+ *
+ * Then, from two terminals:
+ *   1. Start the dev server:   npm run dev        (serves http://localhost:5173)
+ *   2. Run:                    npm run capture:screenshots
+ *
+ * Point at another origin with CAPTURE_BASE_URL, e.g. a built preview:
+ *   CAPTURE_BASE_URL=http://localhost:4173 npm run capture:screenshots
+ */
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const TARGET_URL = 'http://localhost:5173';
-const SCREENSHOT_DIR = path.resolve(process.cwd(), 'docs/images');
-const VIEWPORT = { width: 1440, height: 900 };
+let puppeteer;
+try {
+  ({ default: puppeteer } = await import('puppeteer'));
+} catch {
+  console.error(
+    'puppeteer is not installed. Install it once to capture screenshots:\n' +
+      '  npm install -D puppeteer\n' +
+      '(See the header of this script for details.)',
+  );
+  process.exit(1);
+}
+
+const DEFAULT_URL = 'http://localhost:5173';
+const BASE_URL = process.env.CAPTURE_BASE_URL || DEFAULT_URL;
+
+// Output directory = docs/images (repo root), resolved from this file's location.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const REPO_ROOT = path.resolve(__dirname, '..');
+const OUT_DIR = path.resolve(REPO_ROOT, 'docs/images');
+
+const WIDTH = 1440;
+const HEIGHT = 900;
+const CLIP = { x: 0, y: 0, width: WIDTH, height: HEIGHT };
+
+async function dismissWarningGate(page) {
+  // Gate is skipped if the session already entered; otherwise click it.
+  const entered = await page.evaluate(
+    () => !document.body.textContent.includes('ENTER THE VOID'),
+  );
+  if (entered) return;
+  const handle = await page.evaluateHandle(() =>
+    Array.from(document.querySelectorAll('button')).find((n) =>
+      (n.textContent || '').includes('ENTER THE VOID'),
+    ),
+  );
+  await handle.asElement().click();
+  await page.waitForTimeout(3000);
+}
 
 async function main() {
-  // Ensure output directory exists
-  if (!fs.existsSync(SCREENSHOT_DIR)) {
-    fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
-  }
+  fs.mkdirSync(OUT_DIR, { recursive: true });
 
-  // Launch browser
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-browser-side-navigation'],
   });
-  const page = await browser.newPage();
 
-  await page.goto(TARGET_URL, { waitUntil: 'networkidle0' });
-  await page.waitForTimeout(2000);
-
-  // Click through the warning gate
   try {
-    const enterBtn = await page.waitForSelector('button:contains("ENTER THE VOID")', {
-      timeout: 5000,
-    });
-    if (enterBtn) {
-      await enterBtn.click();
-      await page.waitForTimeout(3000);
+    const page = await browser.newPage();
+    await page.setViewport({ width: WIDTH, height: HEIGHT });
+
+    await page.goto(BASE_URL, { waitUntil: 'networkidle2' });
+    await page.waitForTimeout(2000);
+    await dismissWarningGate(page);
+
+    const shots = [
+      { file: 'project-preview.png', delay: 0 },
+      { file: 'project-active.png', delay: 5000 },
+      { file: 'project-detail.png', delay: 3000 },
+    ];
+
+    for (const shot of shots) {
+      if (shot.delay) await page.waitForTimeout(shot.delay);
+      await page.screenshot({ path: path.join(OUT_DIR, shot.file), clip: CLIP });
+      console.log(`Captured ${shot.file}`);
     }
-  } catch (e) {
-    console.log('No warning gate or already inside');
+  } finally {
+    await browser.close();
   }
-
-  const clip = { x: 0, y: 0, width: VIEWPORT.width, height: VIEWPORT.height };
-
-  // 1. Primary preview — interface after entering, steady state
-  await page.screenshot({
-    path: path.join(SCREENSHOT_DIR, 'project-preview.png'),
-    viewport: VIEWPORT,
-    clip,
-    fullPage: false,
-  });
-  console.log('Captured project-preview.png');
-
-  // 2. Active state — wait for animation to settle into a meaningful frame
-  await page.waitForTimeout(5000);
-  await page.screenshot({
-    path: path.join(SCREENSHOT_DIR, 'project-active.png'),
-    viewport: VIEWPORT,
-    clip,
-    fullPage: false,
-  });
-  console.log('Captured project-active.png');
-
-  // 3. Detail shot — another animation frame, focusing on different area
-  await page.waitForTimeout(3000);
-  await page.screenshot({
-    path: path.join(SCREENSHOT_DIR, 'project-detail.png'),
-    viewport: VIEWPORT,
-    clip,
-    fullPage: false,
-  });
-  console.log('Captured project-detail.png');
-
-  await browser.close();
 }
 
 main().catch((err) => {

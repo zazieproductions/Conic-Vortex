@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Occult eye favicon on a near-black rounded tile. -->
+  <rect width="64" height="64" rx="12" fill="#0a0008"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M8 28 Q32 6 56 28 Q32 54 8 28 Z" stroke="#ff00ff" stroke-width="5"/>
+    <circle cx="32" cy="30" r="16" stroke="#00ffff" stroke-width="4"/>
+    <path d="M32 18 C 38 25, 38 35, 32 42 C 26 35, 26 25, 32 18 Z"
+          fill="#ff0000" stroke="#ffffff" stroke-width="2"/>
+    <path d="M14 12 L18 18 M50 12 L46 18" stroke="#ffffff" stroke-width="3"/>
+  </g>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Occult "all-seeing" eye with a slit (goat) pupil. Transparent background
+       so it composites cleanly as a Three.js billboard or a mix-blend sigil. -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Almond lid -->
+    <path d="M60 190 Q256 -40 452 190 Q256 560 60 190 Z"
+          stroke="#ffffff" stroke-width="14"/>
+    <!-- Iris ring -->
+    <circle cx="256" cy="236" r="112" stroke="#ff00ff" stroke-width="12"/>
+    <circle cx="256" cy="236" r="86" stroke="#00ffff" stroke-width="6"/>
+    <!-- Slit pupil -->
+    <path d="M256 172 C 282 210, 282 264, 256 300 C 230 264, 230 210, 256 172 Z"
+          fill="#ff0000" stroke="#ffffff" stroke-width="6"/>
+    <!-- Lash rays top -->
+    <path d="M120 108 L96 66 M196 64 L184 18 M256 48 L256 4 M318 66 L330 20 M392 108 L414 66"
+          stroke="#ffffff" stroke-width="12"/>
+    <!-- Under-lid shading -->
+    <path d="M256 470 C 160 470, 92 420, 60 340"
+          stroke="#ff00ff" stroke-width="10" opacity="0.7"/>
+  </g>
+</svg>

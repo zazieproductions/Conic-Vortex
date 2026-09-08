@@ -1,10 +1,19 @@
 name: Deploy to GitHub Pages
 
+# Build the site and publish `dist/` to the `gh-pages` branch. Runs only on
+# pushes to the default branch — pull requests are validated by `ci.yml`.
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
+
+# Grant GITHUB_TOKEN permission to push the built artifact to gh-pages.
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
 
 jobs:
   build-and-deploy:
@@ -19,12 +28,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build production
         run: npm run build
+        # GitHub Pages *project* sites are served from a sub-path
+        # (/Conic-Vortex/). Setting VITE_BASE makes asset/route URLs correct.
+        env:
+          VITE_BASE: /Conic-Vortex/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

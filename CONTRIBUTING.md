@@ -1,102 +1,84 @@
-# Contributing to Y̷Y̶Y̸Y̵Y̷Y̶Y̸
+# Contributing to Conic-Vortex
 
-Thank you for considering contributing to this creative technology project! This repository is maintained by Zazie Productions and represents a unique blend of artistic vision and engineering.
+Thanks for considering contributing. This is a creative-technology project that
+sits at the intersection of art and engineering — code, documentation,
+audio-visual experiments, and aesthetic ideas are all welcome. Above everything,
+please honor the project's artistic integrity (see
+[Creative methodology](docs/creative-methodology.md)).
 
-## Contribution Workflow
+## Ground rules
 
-### 1. Fork the Repository
-Fork the project on GitHub and clone your fork locally.
+- **Preserve the eccentricities.** Do not smooth away the project's strange,
+  hostile-interface character.
+- **Keep the warning gate.** It is an ethical accessibility feature.
+- **No "startup-ifying".** No pastel overhauls or generic portfolio branding.
+- **One responsibility per module** and TypeScript strict, matching existing style.
 
-```bash
-git clone https://github.com/your-username/Conic-Vortex.git
-cd Conic-Vortex
-```
+## Workflow
 
-### 2. Create a Branch
-Create a new branch for your feature or bug fix.
+1. **Fork** the repository and clone your fork.
+2. **Create a branch** off `main`:
 
-```bash
-git checkout -b feature/your-feature-name
-# or
-git checkout -b fix/your-bug-description
-```
+   ```bash
+   git checkout -b feature/your-feature-name
+   # or
+   git checkout -b fix/your-bug-description
+   ```
 
-### 3. Set Up Development Environment
+3. **Set up** a reproducible install and the dev server:
 
-```bash
-# Install dependencies
-npm ci
+   ```bash
+   npm ci
+   npm run dev
+   ```
 
-# Run the development server
-npm run dev
+4. **Make your changes** and add comments that explain _why_, not just _what_.
 
-# Verify linting passes
-npm run lint
+5. **Verify** before pushing:
 
-# Verify type checking passes
-npx tsc -b
-```
+   ```bash
+   npm run lint
+   npm run typecheck
+   npm run format:check
+   npm run build
+   # or, all at once:
+   npm run validate
+   ```
 
-### 4. Make Your Changes
-- Follow the existing code style and conventions
-- Add appropriate comments explaining the WHY of your changes
-- Preserve the project's artistic aesthetic and conceptual integrity
-- Do not genericize or "startup-ify" the project's distinctive qualities
-- Keep the warning gate and accessibility considerations in mind
+6. **Manually test** the piece (see [docs/testing.md](docs/testing.md)): gate,
+   3-D layer, all three altar controls, popups, escape button, resize, perf.
 
-### 5. Test Your Changes
-- Verify the project still launches and the warning gate works
-- Check that all existing subsystems (3D chaos, symbol storm, popups, audio) function correctly
-- Test intensity toggles, mute toggle, color invert
-- Ensure the Escape button flees correctly
-- Verify the control altar buttons work
+7. **Commit** with a clear, descriptive message; keep the change small and
+   logically separable so it can be reviewed or reverted on its own.
 
-### 6. Commit Your Changes
-```bash
-git add .
-git commit -m "your descriptive commit message
-```
+8. **Push and open a pull request** against `main`:
 
-### 7. Push and Open a Pull Request
-```bash
-git push origin feature/your-feature-name
-```
-Navigate to your fork on GitHub and open a Pull Request against the main `arena/01a06540-conic-vortex` branch.
+   ```bash
+   git push origin your-feature-branch
+   ```
 
-## Development Guidelines
+   In the PR description, note what changed, why, and how it preserves the
+   project's artistic integrity (plus any new dependencies).
 
-### Artistic Integrity
-This project has a distinct aesthetic and conceptual vocabulary — damaged systems, cybernetic instruments, archival interfaces, signal decay, hostile information architecture. When adding features or refactoring:
+## Documentation expectations
 
-- **Preserve the eccentricities** — do not smooth over the project's strange qualities
-- **Serve the artistic concept** — every technical decision should support the creative vision
-- **Avoid startup branding** — no pastel color schemes, no sterile "designer" aesthetics, no generic developer portfolio language
-- **Keep the warnings** — the photosensitive warning gate must remain
+- Update the root [README.md](README.md) if your change affects setup,
+  configuration, or usage.
+- Update [docs/architecture.md](docs/architecture.md) if you add or reshape a
+  subsystem.
+- Add ideas / directions to [docs/roadmap.md](docs/roadmap.md) rather than
+  pretending they are shipped.
 
-### Technical Standards
-- TypeScript type safety — no `any` types unless absolutely necessary
-- ESLint — all new code must pass `npm run lint`
-- Type check — `npx tsc -b` must pass without errors
-- No build breakages — `npm run build` must produce clean output
-- Keep dependencies updated but don't remove core aesthetic systems
+## Reporting issues
 
-### Branching Model
-- All work happens on `arena/01a06540-conic-vortex` (this session's branch)
-- Feature branches should be created from `arena/01a06540-conic-vortex`
-- Pull requests merge into `arena/01a06540-conic-vortex`
-- Commits should be signed and descriptive
+- **Bugs & features:** use the [issue templates](.github/ISSUE_TEMPLATE/).
+- **Security:** follow [SECURITY.md](SECURITY.md) (report privately; do not open a
+  public issue).
 
-### Submitting Changes
-1. Ensure all tests pass (lint, typecheck, build)
-2. Update README.md if your changes affect configuration or setup
-3. Update ARCHITECTURE.md if you add new subsystems
-4. Open a Pull Request with a clear description of:
-   - What changed
-   - Why it changed
-   - How it preserves the project's artistic integrity
-   - Any new dependencies added
+## Need help?
 
-### Questions or Discussion?
-- Open an issue on the GitHub repository
-- Contact the maintainers directly
-- Check the [ARCHITECTURE.md](ARCHITECTURE.md) for system-level context
+Open an issue or check the docs:
+
+- [docs/architecture.md](docs/architecture.md) — how it is built
+- [docs/development.md](docs/development.md) — day-to-day workflow
+- [docs/creative-methodology.md](docs/creative-methodology.md) — the artistic intent
