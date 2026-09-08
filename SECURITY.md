@@ -1,38 +1,38 @@
 # Security
 
-## Supported Versions
+## Scope
 
-Currently this project does not have formal security maintenance or vulnerability reporting.
-All code runs client-side in the browser. No data is transmitted to external servers
-except:
+Conic-Vortex is a **fully static, client-side** application. There is no server,
+no backend API, no authentication, no database, and no user accounts. All code
+executes in the visitor's browser from files that are built and served statically.
 
-- Arena recording metadata (RRWeb) — stored in sessionStorage, exfiltrated on demand
-- GitHub Pages deployment — static asset deployment only
+## What the code does and does not do
 
-## Reporting Security Issues
+- **Web Audio API** synthesizes all audio procedurally — no audio files, no
+  third-party audio sources.
+- **Three.js** renders only procedural geometry and the bundled sprite SVGs — no
+  external models or textures fetched at runtime.
+- **No WebSockets, no long-polling, no third-party trackers.**
+- **No persistence** — the experience does not store user data in
+  `localStorage`/`sessionStorage`, and closing the tab resets all state.
 
-If you discover a security concern in this project, please:
+## Reporting a vulnerability
 
-1. **Do not** open a public GitHub Issue
-2. Contact the maintainers directly through the repository owner
-3. Describe the issue and potential impact
+If you believe you have found a security issue in this project, please **do not**
+open a public GitHub issue.
 
-The project has no known security vulnerabilities at this time, as all code executes
-client-side with no external API calls, no authentication, and no user data persistence.
+1. Report privately to the repository owner (maintained by Zazie Productions).
+2. Describe the issue, the impact, and — where possible — a minimal reproduction.
+3. Allow a reasonable period for a fix before disclosure.
 
-## Client-Side Considerations
+This project has no known security vulnerabilities at this time. Because it ships
+only static content, the practical attack surface is limited to browser-side
+behavior and any third-party assets it loads (e.g. Google Fonts).
 
-- The Web Audio API generates procedural audio — no external audio files, no
-  external audio sources, no embedding of third-party sound libraries
-- Three.js renders exclusively from procedural geometries and colors — no external
-  3D models, no external textures beyond 3 sprite assets (eye, goat, sun)
-- No WebSocket connections, no Server-Sent Events, no long-polling
-- No login, no authentication, no user accounts
-- No third-party scripts or trackers (beyond the Arena recording infrastructure)
+## Safe usage
 
-## Safe Usage
-
-- This project contains strobe effects and rapid visual changes
-- A warning gate is presented on first entry — users can opt out before viewing
-- Users with photosensitive epilepsy should heed the warning
-- The project does not access microphones, cameras, or sensors by default
+- The experience contains **strobes and rapid visual changes** and shows a
+  mandatory photosensitive warning gate before running. Users with photosensitive
+  epilepsy should heed it and can leave at the gate.
+- The page does not access the microphone, camera, or sensors by default, and no
+  such capability is requested.

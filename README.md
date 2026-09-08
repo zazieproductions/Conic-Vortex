@@ -1,318 +1,377 @@
-# Y̷Y̶Y̸Y̵Y̷Y̶Y̸
+<div align="center">
 
-A browser-based interactive audio-visual instrument exploring procedural systems, audiovisual signal processing, and hostile interface design.
+# ⟁ Conic-Vortex
 
-**Created by Zazie Productions**
+### Y̷Y̶Y̸Y̵Y̷Y̶Y̸ — a real-time browser instrument for procedural audio-visual chaos
 
-> Click the interface below to launch the live project.
+A hostile-interface glitch experience: procedural 3-D geometry, Web-Audio synthesis,
+rune storms, self-replicating popups, and an uncooperative UI. Built with **React 19 ·
+Vite 7 · Three.js · Tailwind CSS 4**.
 
-[![Project Preview](docs/images/project-preview.png)](https://zazie-productions.github.io/Conic-Vortex/)
+**Zazie Productions**
 
-[![Launch Live Project](https://img.shields.io/badge/Launch-Live_Project-111111?style=for-the-badge)](https://zazie-productions.github.io/Conic-Vortex/)
+[![Launch the live project](https://img.shields.io/badge/Launch%20Live%20Project-000000?style=for-the-badge&logo=github&logoColor=%23ff0000&color=%23000000&labelColor=%23ff00ff)](https://zazie-productions.github.io/Conic-Vortex/)
+[![CI](https://img.shields.io/github/actions/workflow/status/zazieproductions/Conic-Vortex/ci.yml?label=CI&style=for-the-badge&logo=githubactions&color=%2300ff88)](https://github.com/zazieproductions/Conic-Vortex/actions)
+[![License: MIT](https://img.shields.io/badge/license-MIT-%23ff00ff?style=for-the-badge)](LICENSE)
 
----
+</div>
 
-## ⚠️ WARNING
+> **⚠️ SENSORY WARNING —** the live piece contains **rapidly flashing lights,
+> strobing colors, loud procedural noise, and aggressive motion**. It is not
+> suitable for photosensitive visitors. A mandatory acknowledgement gate is shown
+> before anything runs — you can always leave at the gate.
 
-This site contains rapidly flashing lights, strobing colors, loud procedural noise, and aggressive motion. **NOT suitable for photosensitive visitors, the faint of heart, or the sane.** By entering you agree that your cursor becomes a ritual implement.
+<div align="center">
 
----
+![Preview render of the Conic-Vortex experience](docs/images/project-preview.png)
 
-## Overview
+_Preview render of the running experience. Capture pixel-true screenshots anytime with [`npm run capture:screenshots`](#screenshots)._
 
-Y̷Y̶Y̸Y̵Y̷Y̶Y̸ is a real-time generative web application that combines Three.js 3D chaos, particle systems, symbol storms, and cascading popups into a hostile information architecture. The project renders a procedurally generated vortex of 3D objects, textures, and typographic elements that respond to user interaction with audio feedback, cursor trails, and escalating chaos states.
-
-The experience is structured as layered systems:
-- **Layer 0**: Strobing background and checker patterns
-- **Layer 1**: 3D chaos with 44 procedurally spinning objects
-- **Layer 2**: Symbol storm with randomized runes and characters
-- **Layer 3**: Marquee strips with occult and technical terminology
-- **Layer 4**: Popup hell with self-referential recursive behavior
-- **Layer 5**: Cursor trail and control altar
-
----
-
-## Live Demo
-
-**Live Project**: https://zazie-productions.github.io/Conic-Vortex/
-
-Launch the interactive experience above. The project will present a warning gate — you must acknowledge the content warnings to proceed.
+</div>
 
 ---
 
-## Features
+## Table of contents
 
-- **Procedural 3D Chaos**: 44 unique 3D meshes (tori, knots, Platonic solids) with independent orbital motion and randomization
-- **Symbol Storm**: Dynamic flood of runic characters that teleport, grow/shrink, and animate with varied motion profiles
-- **Marquee Layer**: Scrolling strips of formatted text with blend-mode effects (difference, exclusion, normal)
-- **Popup Hell**: Self-replicating popups that spawn more popups when closed — "hydra rule"
-- **Cursor Trail**: Mouse-following particle trail with fading, rotating symbols
-- **Control Altar**: Three interactive buttons — ☠ DO NOT CLICK (escapes), ⛧ MORE CHAOS (increases intensity), 🔊 NOISE ON / 🔇 SILENCE (toggle mute)
-- **Audio Drone**: Continuous ambient drone with frequency modulation, plus blip and scream sound effects
-- **Glitch & Rainbow Text**: Animated CSS keyframe effects on the central Y̷Y̶Y̸Y̵Y̷Y̶Y̸ title
-- **Invert World**: Toggle color inversion via the control button
-- **Escape Button**: Fleeing button that runs away from your cursor, with increasing "taunts"
-
----
-
-## Technical Architecture
-
-The project is built with **React 19**, **Vite 7**, and **TailwindCSS 4** with the following key subsystems:
-
-- **Three.js Rendering**: `src/components/ThreeChaos.tsx` — full scene graph with camera, lighting, particle fields, and 44 animated meshes
-- **Audio Engine**: `src/lib/noise.ts` — AudioContext-driven drone, blips, and scream effects with LFO modulation
-- **Symbol/Particle Systems**: `src/components/SymbolStorm.tsx` and `src/components/MarqueeLayer.tsx` — state-managed React systems with interval-based updates
-- **Interactive Layers**: `src/components/{CursorTrail,EscapeButton,PopupHell,ThreeChaos}.tsx` — each manages its own `useState` + `useEffect` animation loop
-- **Global State**: Managed within `App.tsx` — `entered` gate, `intensity` (1-5), `muted` state, `inverted` world state, `counter` visitor counter
+1. [Why it exists](#why-it-exists)
+2. [What it does](#what-it-does)
+3. [Key capabilities](#key-capabilities)
+4. [Demo / preview](#demo--preview)
+5. [Architecture](#architecture)
+6. [Project structure](#project-structure)
+7. [Quick start](#quick-start)
+8. [Installation](#installation)
+9. [Usage](#usage)
+10. [Configuration](#configuration)
+11. [Development](#development)
+12. [Testing](#testing)
+13. [Troubleshooting](#troubleshooting)
+14. [Roadmap](#roadmap)
+15. [Contributing](#contributing)
+16. [License & credits](#license--credits)
 
 ---
 
-## Signal Flow
+## Why it exists
 
-1. **App.entered** gates the entire experience — until acknowledged, only the WarningGate is visible
-2. **initAudio()** creates an AudioContext and starts a 4-frequency drone with LFO-modulated oscillator frequencies
-3. **blip()** generates a random-type oscillator glissando (80→2500Hz exponential ramp, 0.25s duration)
-4. **scream()** triggers 5 rapid blips spaced 60ms apart
-5. **toggleMute()** fades drone gain to silence with `setTargetAtTime` for smooth amplitude modulation
-6. **Mouse movement** triggers `CursorTrail` — spawns fading trail bits at the cursor position
-7. **Control buttons** modify `App` state: `setIntensity`, `setMuted`, `setInverted`
-8. **Intensity** (1-5) propagates to `SymbolStorm` (affects count: 30 + intensity × 12) and `PopupHell` (affects spawn interval: max(1200, 3200 - intensity × 400))
-9. **ThreeChaos** maintains its own internal clock and mesh userData for orbital motion, independent of App state
+Conic-Vortex started as an experiment in **hostile information architecture**: an
+interface designed to _resist_ its user rather than serve them. Instead of a calm
+tool, it is a small, self-contained "machine god" that turns your cursor, your
+clicks, and your willingness to look into part of a generative system.
 
----
+It exists for three audiences:
 
-## Project Structure
+- **Creative-technology portfolios / studios** — a compact, dependency-light
+  demonstration of WebGL, Web Audio, and expressive CSS engineering as _art_.
+- **Engineers & researchers** — clean React/TypeScript boundaries, a zero-asset
+  audio engine, and a layered, mostly stateless render pipeline that is easy to
+  read, fork, and repurpose.
+- **Artists & audiences** — a one-click ritual object that requires no login,
+  no install, and no explanation.
 
+The repository is deliberately structured so the engineering quality is legible
+_and_ the strangeness is preserved: this is a horror-object that is also a tidy
+codebase.
+
+## What it does
+
+You land on a black screen. A warning tells you exactly what you are about to
+experience. If you enter, you are dropped into a full-screen, real-time collage
+of layered systems:
+
+| Layer | System                       | What you see                                                                                               |
+| ----: | :--------------------------- | :--------------------------------------------------------------------------------------------------------- |
+|     0 | Strobe + checker backgrounds | High-speed color strobing over a scrolling conic-gradient vortex                                           |
+|     1 | **Three.js scene**           | 44 procedurally seeded meshes orbiting a large wireframe knot, 900 particles, ~21 occult sprite billboards |
+|     2 | Symbol storm                 | Runic glyphs that teleport, spin, and scale with the chaos level                                           |
+|   2.5 | Giant sigils                 | Oversized eye / goat / sun glyphs rotating with `mix-blend-mode: difference`                               |
+|     3 | Marquee strips               | 8 scrolling ticker bands of occult + technical prose                                                       |
+|     4 | Popup hell                   | Self-replicating popups — close one and it "hydra"-spawns two                                              |
+|     5 | Overlays                     | Flash bursts and VHS scanlines over everything                                                             |
+|     6 | Cursor trail                 | Your cursor leaves a fading trail of rotating symbols                                                      |
+|     7 | Control altar                | Three controls: **☠ DO NOT CLICK**, **⛧ MORE CHAOS**, **🔊 NOISE ON**                                      |
+
+Everything is generated live in the browser. There are **no image assets in the
+render path, no audio files, and no external data** — the eye/goat/sun glyphs are
+the only shipped images, and the entire soundscape is synthesized by the Web Audio
+API in `src/audio/engine.ts`.
+
+## Key capabilities
+
+- **Procedural 3-D scene** — `src/components/ThreeChaos.tsx` owns a self-contained
+  Three.js world with per-mesh orbit/bob/spin kinematics and its own animation
+  clock. React never re-renders it.
+- **Synthesized audio engine** — `src/audio/engine.ts` builds a detuned, LFO-modulated
+  drone plus `blip()` / `scream()` one-shots. Mute uses exponential gain ramps so
+  the drone fades smoothly rather than snapping.
+- **Intensity state** — a 1–5 chaos dial scales two independent systems:
+  `SymbolStorm` count (`30 + intensity×12`) and `PopupHell` spawn cadence.
+- **"Hydra" popups** — closing one popup summons two more, capped at `MAX_POPUPS`.
+- **Photosensitive safety gate** — an explicit acknowledgement wall that also
+  supplies the single user-gesture the browser requires before audio can start.
+- **Accessible-by-a11y-docs controls** — the control altar carries live
+  `aria-pressed`, `aria-label`, and descriptive text in addition to its on-theme copy.
+- **WebGL-graceful degradation** — the 3-D layer disposes cleanly and, if WebGL is
+  unavailable, logs and lets the rest of the piece run.
+
+## Demo / preview
+
+- **Live project:** <https://zazie-productions.github.io/Conic-Vortex/>
+- **Local preview:** run [`npm run dev`](#development) and open the printed URL.
+
+> This is an interactive, audio-visual work — a static screenshot cannot convey the
+> motion or sound. If you are evaluating it as a portfolio piece, launch it with
+> sound on and give it a few seconds to escalate.
+
+## Architecture
+
+The piece is a single-page app orchestrated by `src/App.tsx`. State lives in one
+place and flows _down_ as props; the audio engine and the 3-D scene are side-effect
+modules that never read React state. Rendering uses three complementary engines,
+each chosen for what it does best:
+
+```mermaid
+flowchart LR
+    subgraph React[React 19]
+      App[App.tsx<br/>gate + global state]
+      Gate[WarningGate]
+      Storm[SymbolStorm]
+      Popup[PopupHell]
+      Trail[CursorTrail]
+      Escape[EscapeButton]
+      Marquee[MarqueeLayer]
+      Altar[ControlAltar]
+    end
+    subgraph Engines[Runtime engines]
+      Three[Three.js scene<br/>ThreeChaos.tsx]
+      Audio[Web Audio synth<br/>audio/engine.ts]
+      CSS[CSS keyframes<br/>index.css]
+    end
+
+    App --> Gate
+    App --> Storm
+    App --> Popup
+    App --> Marquee
+    App --> Trail
+    App --> Escape
+    App --> Altar
+    App --> Three
+    App --> Audio
+    Altar --> Audio
+    Storm --> CSS
+    Popup --> Audio
+    Trail --> CSS
+    Marquee --> CSS
 ```
-src/
-├── App.tsx           — Main application component, state gate, control altar
-├── main.tsx          — React root entry point
-├── index.css         — TailwindCSS base, custom fonts, all keyframe animations
-├── components/
-│   ├── ThreeChaos.tsx      — WebGL Three.js scene (44 meshes, orbital motion, sprites)
-│   ├── MarqueeLayer.tsx    — Scrolling text strips with blend-mode effects
-│   ├── SymbolStorm.tsx     — Particle-like runic character storm
-│   ├── PopupHell.tsx       — Self-replicating popup system
-│   ├── CursorTrail.tsx     — Mouse-following fading symbol trail
-│   └── EscapeButton.tsx    — Fleeing interactive button
-└── lib/
-    └── noise.ts          — AudioContext drone, blip, scream, toggleMute
 
-docs/
-├── architecture/         — ARCHITECTURE.md (system design, signal flow, diagrams)
-├── design/             — Design system documentation
-├── images/             — Screenshots and social preview
-├── technical/          — Subsystem technical docs
-└── development/        — Setup, debugging, deployment docs
+The CSS keyframe layer is the workhorse for motion: strobe, marquee, hue-spin,
+glitch, and scanline effects all run on the GPU/compositor rather than in
+JavaScript, which is why the piece stays fluid despite being visually chaotic.
 
-public/                 — Static assets, favicon, index.html
-scripts/                — Capture screenshots, build tools
-package.json            — Dependencies and npm scripts
-vite.config.ts          — Vite configuration
-tsconfig*.json          — TypeScript configuration
-.eslintrc.js            — ESLint configuration
+A detailed **system architecture** (component inventory, state, event flow, render &
+audio pipelines, performance model, design decisions) lives in
+[`docs/architecture.md`](docs/architecture.md).
+
+## Project structure
+
+```text
+.
+├── .github/
+│   ├── ISSUE_TEMPLATE/          # Bug report & feature request templates
+│   └── workflows/
+│       ├── ci.yml               # lint · typecheck · format · build on PR/push
+│       └── deploy-pages.yml     # build + publish to GitHub Pages on main
+├── docs/                        # Authoritative, living documentation
+│   ├── README.md                # docs index / map
+│   ├── architecture.md          # system architecture & design decisions
+│   ├── audio-engine.md          # the Web-Audio synthesis system
+│   ├── rendering.md             # 3-D scene, CSS layer system, blend modes
+│   ├── creative-methodology.md  # artistic intent & the hostile-interface canon
+│   ├── configuration.md         # env vars, base path, build knobs
+│   ├── development.md           # setup, workflows, debugging
+│   ├── deployment.md            # GitHub Pages & asset-base notes
+│   ├── testing.md               # verification & troubleshooting
+│   └── images/                  # preview + social assets
+├── public/                      # served as-is (favicon, og.png)
+│   ├── favicon.svg
+│   └── og.png
+├── scripts/
+│   └── capture-screenshots.mjs  # optional headless screenshot tooling
+├── src/
+│   ├── App.tsx                  # orchestrator: gate, global state, layer stack
+│   ├── main.tsx                 # React root
+│   ├── index.css                # Tailwind base + @theme fonts + keyframes
+│   ├── assets/sprites/          # occult eye / goat / sun SVG billboards
+│   ├── audio/engine.ts          # Web Audio synthesis (drone, blip, scream)
+│   └── components/              # one focused module per visible system
+│       ├── WarningGate.tsx
+│       ├── ControlAltar.tsx
+│       ├── ThreeChaos.tsx
+│       ├── SymbolStorm.tsx
+│       ├── PopupHell.tsx
+│       ├── MarqueeLayer.tsx
+│       ├── CursorTrail.tsx
+│       └── EscapeButton.tsx
+├── index.html                   # HTML shell + social/metadata + runtime harness
+├── package.json
+├── vite.config.ts               # build + env + optional source-tagging plugin
+├── tsconfig*.json
+├── eslint.config.js             # flat-config ESLint
+└── .prettierrc.json
 ```
 
----
+See [`docs/README.md`](docs/README.md) for the full documentation index.
+
+## Quick start
+
+Requires **Node.js ≥ 20.19** (npm ≥ 10).
+
+```bash
+git clone https://github.com/zazieproductions/Conic-Vortex.git
+cd Conic-Vortex
+
+npm install      # install dependencies
+npm run dev      # start the dev server → open the printed local URL
+```
 
 ## Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/zazie-productions/Conic-Vortex.git
-cd Conic-Vortex
+# Dependencies (reproducible install from the lockfile)
+npm ci
 
-# Install dependencies
-npm install
-
-# Run development server
+# Run the development server with hot reload
 npm run dev
 
-# Build for production
+# Type-check + build the production bundle into dist/
 npm run build
+
+# Preview the production build locally
+npm run preview
 ```
 
----
+## Usage
 
-## Local Development
+The "usage" of this piece is deliberately open-ended — point your cursor, click,
+and let the chaos escalate. The three controls in the lower-center **Control Altar**
+are the whole interface:
 
-```bash
-npm run dev     # Start Vite dev server at http://localhost:5173
-npm run build   # Produce production build in dist/
-npm run lint    # Run ESLint
-npm run preview # Preview production build locally
-```
+| Control                      | Effect                                                             |
+| :--------------------------- | :----------------------------------------------------------------- |
+| **☠ DO NOT CLICK**           | Toggles full-screen color inversion (`invert-world`) with a scream |
+| **⛧ MORE CHAOS [n/5]**       | Raises intensity 1→5 (wraps); more symbols, faster popups          |
+| **🔊 NOISE ON / 🔇 SILENCE** | Mutes the drone + effects with a smooth fade                       |
 
----
+You cannot actually leave with the **escape** button — it runs away from your
+cursor and taunts you. That is the point.
 
-## Production Build
+## Configuration
 
-```bash
-npm run build
-```
+Conic-Vortex runs from sensible defaults and needs **no environment variables** to
+work. A small set of optional build knobs exist for deployment:
 
-Output is in `dist/` — contains `index.html`, `assets/index*.css`, and `assets/index*.js`.  
-The build uses Vite with React plugin and TailwindCSS 4. TypeScript checking is performed via `tsc -b` before the Vite build.
+| Variable                 | Purpose                                                                              | Default       |
+| :----------------------- | :----------------------------------------------------------------------------------- | :------------ |
+| `VITE_BASE`              | Base path served under (e.g. `/Conic-Vortex/` for a GitHub-Pages _project_ site)     | `/`           |
+| `VITE_DEV_ALLOWED_HOSTS` | Comma-separated hosts allowed into the dev server (for sandboxed/live-preview hosts) | _(all local)_ |
 
----
+Copy `.env.example` to `.env` if you need to override any. `npm run dev` and
+`npm run build` pick the values up automatically. See
+[`docs/configuration.md`](docs/configuration.md) and
+[`docs/deployment.md`](docs/deployment.md).
 
-## Deployment
+## Development
 
-The project is deployed to GitHub Pages at https://zazie-productions.github.io/Conic-Vortex/.
+All commands are declared in `package.json`:
 
-Deployment is handled by GitHub Actions workflow `.github/workflows/deploy-pages.yml`, which builds and pushes to the `gh-pages` branch on every push to `main`.
+| Command                           | What it does                                               |
+| :-------------------------------- | :--------------------------------------------------------- |
+| `npm run dev`                     | Vite dev server with hot reload                            |
+| `npm run build`                   | `tsc -b` type-check then production `vite build` → `dist/` |
+| `npm run preview`                 | Serve the production build locally                         |
+| `npm run typecheck`               | Run TypeScript across app + node projects                  |
+| `npm run lint` / `lint:fix`       | ESLint (flat config)                                       |
+| `npm run format` / `format:check` | Prettier write / check                                     |
+| `npm run validate`                | `lint` + `typecheck` + `build` in one shot                 |
+| `npm run clean`                   | Remove `dist/`                                             |
+| `npm run capture:screenshots`     | Optional headless screenshots (see below)                  |
 
----
-
-## Screenshots
-
-| Screenshot | Description |
-|---|---|
-| `docs/images/project-preview.png` | Primary showcase — interface after entering, with warning gate dismissed |
-| `docs/images/project-active.png` | Active state — animation running, chaos at full intensity |
-| `docs/images/project-detail.png` | Detail close-up — highlights the 3D vortex and symbol interactions |
-
----
-
-## Design System
-
-The visual language combines multiple distinct aesthetic traditions:
-
-- **Drip font** (`--font-fraktur`: UnifrakturMaguntia): Blackletter-inspired display
-- **Glitch font** (`--font-glitch`: Rubik Glitch): Disrupted, decomposing letterforms
-- **Eater font** (`--font-eaten`: Eater): Consumptive, distressed styling
-- **Metal font** (`--font-metal`: Metal Mania): Industrial, riveted appearance
-- **Creepster font** (`--font-creep`: Creepster): Horror-styled distressed
-- **TailwindCSS 4** with custom `@theme` configuration for all CSS variables
-- **Color palette**: `#ff0000`, `#00ff00`, `#ffff00`, `#ff00ff`, `#00ffff`, `#7700ff`, `#ff5500`, `#000000`
-- **Blend modes**: `difference`, `exclusion`, `normal` — applied to backgrounds and sigils
-- **Keyframe animations**: strobe, checker scroll, hue spin, spinFast, spinRev, marqueeMove, blinkHard, rainbowText, shakeHard, glitchClip, zoomPulse
-- **Interface hierarchy**: Fixed-position layers z-indexed from 10-70, with control altar at bottom center
-
----
-
-## Concept / Artistic Context
-
-Y̷Y̶Y̸Y̵Y̷Y̶Y̸ explores the tension between perception and information overload. The Y̷Y̶Y̸Y̵Y̷Y̶Y̸ motif — a.yaml Y with strikethroughs — suggests erasure, decay, and the impossibility of fully grasping the displayed system. The project draws from:
-
-- **Institutional machinery aesthetics**: Interface designs that feel like scientific instruments or government portals
-- **Signal decay**: Progressive corruption of visual and audio signals through procedural generation
-- **Hostile information architecture**: Designs that impede rather than facilitate user goals
-- **Procedural subjectivity**: The user's cursor, interactions, and choices become part of the generative system
-- **The Goat as ritual symbol**: Recurring animal motif representing the observer/participant
-
-The work avoids "immersive" or "seamless" experiences in favor of one that explicitly draws attention to its own construction, its artificial constraints, and the ways in which technical systems shape what we can perceive.
-
----
-
-## Performance Considerations
-
-- The Three.js scene renders 44 meshes + 900 particles + sprite objects — scene complexity is high
-- Strobe and checker animations run on CSS keyframes — negligible GPU impact
-- Symbol storm count scales with intensity (30-90 symbols) — manageable on most devices
-- Audio is synthesized via AudioContext — low CPU cost
-- **Recommendation**: Use on desktop/laptop with modern GPU. Not recommended for mobile devices with limited GPU resources.
-- The warning gate exists because of the strobe effects and rapid visual changes.
-
----
-
-## Browser Support
-
-Tested on latest versions of Chrome, Firefox, Safari, and Edge. Mobile browsers may exhibit reduced performance or unexpected behavior due to the WebGL and CSS animation load.
-
----
-
-## Accessibility
-
-- **Warning gate** explicitly notifies of flashing/strobing content — users can opt out before entering
-- `user-select: none` is applied globally to prevent text selection
-- `cursor: crosshair` is the default pointer — no hover-based information disclosure
-- All color combinations use high-contrast pairings (red/cyan, green/magenta, yellow/blue)
-- **However**: The project deliberately employs `filter: invert(1)` / hue-rotate effects, strobe animations, and rapid motion that cannot be easily reconciled with WCAG compliance. The warning gate provides opt-out.
-
----
-
-## Known Limitations
-
-- High scene complexity (44 meshes + 900 particles) may cause performance degradation on integrated GPUs
-- Audio context may be suspended on page load — user interaction required to resume (`Enter` key or click)
-- Popup system may create many windows — browser pop-up blockers will prevent some popups from appearing
-- The "Escape Button" may be difficult to click when intensity is high (it flees rapidly)
-- Intensity level 5 produces the maximum chaotic state — may be overwhelming by design
-- No save/presist state — closing the page resets all state including visitor counter and intensity
-
----
+See [`docs/development.md`](docs/development.md) for the full developer guide,
+including branch guidance and a debugging checklist.
 
 ## Testing
 
-- Clean install: `npm ci`
-- Type check: `npx tsc -b`
-- Lint: `npm run lint`
-- Production build: `npm run build`
-- Preview: `npm run preview`
+There is no unit-test suite today — the piece is DOM/WebGL/Web-Audio heavy and its
+primary "test" is a manual visual pass. Automated verification is provided by:
 
-No automated UI tests are currently configured — manual testing is the primary verification method.
+- **TypeScript strict checking** (`npm run typecheck`)
+- **ESLint** (`npm run lint`)
+- **Prettier** formatting (`npm run format:check`)
+- **Production build** (`npm run build`)
 
----
+All four run automatically in CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml))
+on Node 20 and 22 for every PR and push to `main`. See
+[`docs/testing.md`](docs/testing.md) for the manual test checklist and how to add
+automated tests later.
+
+### Screenshots
+
+Real, pixel-true screenshots are captured with a headless browser. `puppeteer` is
+deliberately **not** a default dependency (it would download Chromium on every
+install), so install it once when you need it:
+
+```bash
+npm install -D puppeteer     # one-time
+npm run dev                  # terminal 1: keep the dev server running
+npm run capture:screenshots  # terminal 2: writes docs/images/*.png
+```
+
+## Troubleshooting
+
+**The 3-D layer is missing.** The scene requires WebGL; if it is unavailable the
+layer logs a warning and the rest of the piece runs. Check for a blocked GPU /
+WebGL-disabled browser setting.
+
+**No sound.** Browsers block audio until a user gesture. Click **ENTER THE VOID** —
+that button call is what creates/resumes the `AudioContext`. If you muted with
+🔇, toggle back to 🔊.
+
+**GitHub Pages looks unstyled / sprites 404.** The deployed page must know it is
+served from a sub-path. The Pages workflow sets `VITE_BASE=/Conic-Vortex/` for you;
+for manual deploys set the same variable (see [`docs/deployment.md`](docs/deployment.md)).
+
+**Dev server rejects a preview/forwarded host.** Vite 7 validates the `Host`
+header. Start it with `VITE_DEV_ALLOWED_HOSTS=.your.domain npm run dev`, or omit it
+for plain `localhost` work.
+
+More in [`docs/testing.md`](docs/testing.md) → _Troubleshooting_.
 
 ## Roadmap
 
-### Near-term
-
-- Add `prettier` formatting consistent across codebase
-- Extract CSS variables from `index.css` into `tailwind.config.js` `theme.extend`
-- Add TypeScript strict mode validation
-- Implement `resumeAudio()` on user gesture rather than `useEffect` dependency
-- Add `aria-label` descriptions to control buttons
-- Fix `data-source-loc` attributes on generated elements for element-picker support
-
-### Experimental
-
-- WebAudioWorklet-based parametric EQ filter on the drone output
-- OSC/MIDI input integration for external controller mapping
-- Shader-based post-processing pipeline (blur, bloom, chromatic aberration)
-- Ambient microphone input reactivity (visualize input volume as additional particle field)
-- Multi-channel audio panning for drone spatialization
-- WebRTC data channel for shared experience between peers
-
-### Research Directions
-
-- Differential tree topology — procedurally generating different knot types based on number-theoretic properties
-- Audio-visual sync algorithms — mapping FFT analysis to mesh parameters
-- GPU-driven particle culling — reducing the 900-particle field to visible subset only
-- Lossy compression of the procedural state — storing and replaying generative sequences
-- Constraint-based motion — introducing collision detection between orbiting meshes
-
----
+Direction and ideas are tracked separately in [`docs/roadmap.md`](docs/roadmap.md).
+It distinguishes **near-term engineering polish**, **experimental systems**, and
+open **research directions** — so what is implemented, what is planned, and what is
+aspirational stay clear.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution workflow.
+Contributions — code, documentation, audio-visual experiments, or aesthetic ideas —
+are welcome. Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) first, especially the
+notes on preserving the project's artistic integrity (do not "startup-ify" it).
+The short version:
 
----
+1. Fork & clone.
+2. Create a branch off `main`.
+3. Keep changes small and logically separable.
+4. Ensure `npm run validate` passes.
+5. Open a pull request against `main`.
 
-## License
+## License & credits
 
-See [LICENSE](LICENSE) for license rights and limitations.
-
----
-
-## Credits
-
-**Zazie Productions** — conceptual art, creative coding, and systems design
-
-**Technical contributors** — See git blame and commit history for individual contributions
-
-**Fonts**: UnifrakturMaguntia, Rubik Glitch, Nosifer, Eater, Metal Mania, Creepster (Google Web Fonts)
-
-**Audio**: Synthesized via Web Audio API — no external audio files used
-
----
-
-<!--
-
-## CHANGELOG
-
-See [CHANGELOG.md](CHANGELOG.md) for the project change history.
-
--->
+- **License:** [MIT](LICENSE) — © 2026 **Zazie Productions**.
+- **Concept, art direction & systems:** Zazie Productions.
+- **Engine stack:** [React](https://react.dev), [Vite](https://vite.dev),
+  [Three.js](https://threejs.org), [Tailwind CSS](https://tailwindcss.com).
+- **Fonts:** UnifrakturMaguntia, Rubik Glitch, Nosifer, Eater, Metal Mania &
+  Creepster — served by Google Fonts.
+- **Audio:** synthesized live with the Web Audio API — no audio files ship.
