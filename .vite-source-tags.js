@@ -1,17 +1,16 @@
 /**
  * Vite plugin that adds data-source-loc="file:line:col" attributes to every
- * JSX element at compile time. This enables the element picker to map rendered
- * DOM nodes back to their source file and line number.
+ * JSX element at compile time. This lets source-aware tooling map rendered DOM
+ * nodes back to the file and line that produced them (e.g. for WYSIWYG editing
+ * and hover-to-reveal utilities).
  *
- * Active in both dev and build so the element picker works on deployed previews.
+ * Active in both dev and build so the tagging is present in deployed output.
  *
- * This file is the canonical source; it is shipped as a `.vite-source-tags.js`
- * dotfile inside generated workspaces (see visual_picker.py and the
- * pool-replenisher / worker-executor Dockerfiles). Keep the dotfile copy at
- * ../webapps/.vite-source-tags.js byte-identical to this file.
- *
- * Uses @babel/parser, @babel/traverse, and @babel/generator which are already
+ * Uses @babel/parser, @babel/traverse, and @babel/generator, which are already
  * transitive dependencies of @vitejs/plugin-react (no extra install needed).
+ *
+ * This plugin is optional runtime tooling; the application itself never depends
+ * on the `data-source-loc` attributes it emits.
  */
 
 import { parse } from '@babel/parser';
@@ -56,9 +55,12 @@ export function sourceTags() {
 
           // Skip fragments (<> / <React.Fragment>)
           if (t.isJSXIdentifier(node.name) && node.name.name === 'Fragment') return;
-          if (t.isJSXMemberExpression(node.name) &&
-              t.isJSXIdentifier(node.name.property) &&
-              node.name.property.name === 'Fragment') return;
+          if (
+            t.isJSXMemberExpression(node.name) &&
+            t.isJSXIdentifier(node.name.property) &&
+            node.name.property.name === 'Fragment'
+          )
+            return;
           if (!node.name.name && t.isJSXNamespacedName(node.name)) return;
 
           const loc = node.loc;
@@ -66,9 +68,10 @@ export function sourceTags() {
 
           // Skip if already tagged (avoid double-transform on HMR)
           const alreadyTagged = node.attributes.some(
-            attr => t.isJSXAttribute(attr) &&
-                    t.isJSXIdentifier(attr.name) &&
-                    attr.name.name === 'data-source-loc'
+            (attr) =>
+              t.isJSXAttribute(attr) &&
+              t.isJSXIdentifier(attr.name) &&
+              attr.name.name === 'data-source-loc',
           );
           if (alreadyTagged) return;
 
@@ -79,10 +82,7 @@ export function sourceTags() {
           const value = `${relPath}:${loc.start.line}:${loc.start.column}`;
 
           node.attributes.push(
-            t.jsxAttribute(
-              t.jsxIdentifier('data-source-loc'),
-              t.stringLiteral(value)
-            )
+            t.jsxAttribute(t.jsxIdentifier('data-source-loc'), t.stringLiteral(value)),
           );
 
           modified = true;
@@ -97,5 +97,5 @@ export function sourceTags() {
   };
 }
 
-// Back-compat alias: older injected vite.config templates imported this name.
+// Back-compat alias for configs that imported the original name.
 export const agonSourceTags = sourceTags;

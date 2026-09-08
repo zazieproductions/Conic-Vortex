@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { blip } from '../lib/noise';
+import { blip } from '../audio/engine';
 
 export default function EscapeButton() {
   const [pos, setPos] = useState({ x: 70, y: 70 });
@@ -11,7 +11,15 @@ export default function EscapeButton() {
     setPos({ x: 8 + Math.random() * 75, y: 12 + Math.random() * 70 });
   };
 
-  const labels = ['CLICK TO ESCAPE', 'TOO SLOW', 'PATHETIC', 'NICE TRY', 'THERE IS NO ESCAPE', 'STOP TRYING', 'YOU LIVE HERE NOW'];
+  const labels = [
+    'CLICK TO ESCAPE',
+    'TOO SLOW',
+    'PATHETIC',
+    'NICE TRY',
+    'THERE IS NO ESCAPE',
+    'STOP TRYING',
+    'YOU LIVE HERE NOW',
+  ];
 
   return (
     <button

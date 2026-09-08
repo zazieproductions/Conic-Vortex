@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Baphomet goat head: pentagram brow, swept horns, blank eyes. -->
+  <g fill="none" stroke-linejoin="round" stroke-linecap="round">
+    <!-- Horns -->
+    <path d="M150 176 C 92 120, 66 60, 96 14 C 138 34, 178 74, 196 128"
+          stroke="#ff00ff" stroke-width="18"/>
+    <path d="M362 176 C 420 120, 446 60, 416 14 C 374 34, 334 74, 316 128"
+          stroke="#ff00ff" stroke-width="18"/>
+    <!-- Face -->
+    <path d="M256 48 C 348 88, 402 160, 402 252 C 402 372, 340 452, 256 452
+             C 172 452, 110 372, 110 252 C 110 160, 164 88, 256 48 Z"
+          fill="#ffffff"/>
+    <!-- Chin / beard -->
+    <path d="M256 360 C 306 340, 336 320, 336 300 C 336 348, 300 452, 256 452
+             C 212 452, 176 348, 176 300 C 176 320, 206 340, 256 360 Z"
+          fill="#000000" opacity="0.12"/>
+    <!-- Pentagram on the brow -->
+    <g stroke="#ff0000" stroke-width="9" fill="none">
+      <path d="M256 120 L 322 214 L 214 168 L 298 168 L 190 214 Z"/>
+    </g>
+    <!-- Eye sockets -->
+    <path d="M180 240 a34 26 0 1 0 68 0 a34 26 0 1 0 -68 0" fill="#000000" stroke="none"/>
+    <path d="M264 240 a34 26 0 1 0 68 0 a34 26 0 1 0 -68 0" fill="#000000" stroke="none"/>
+    <circle cx="214" cy="242" r="6" fill="#ff0000"/>
+    <circle cx="298" cy="242" r="6" fill="#ff0000"/>
+    <!-- Snout line -->
+    <path d="M256 256 L256 320" stroke="#ff0000" stroke-width="8"/>
+  </g>
+</svg>

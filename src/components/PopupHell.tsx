@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { blip, scream } from '../lib/noise';
+import { blip, scream } from '../audio/engine';
 
 const TITLES = [
   '⚠ MESSAGE FROM BEYOND ⚠',
@@ -57,14 +57,17 @@ export default function PopupHell({ intensity }: { intensity: number }) {
   const [popups, setPopups] = useState<Popup[]>([makePopup()]);
 
   useEffect(() => {
-    const iv = setInterval(() => {
-      setPopups((prev) => {
-        const next = [...prev, makePopup()];
-        while (next.length > MAX_POPUPS) next.shift();
-        return next;
-      });
-      blip();
-    }, Math.max(1200, 3200 - intensity * 400));
+    const iv = setInterval(
+      () => {
+        setPopups((prev) => {
+          const next = [...prev, makePopup()];
+          while (next.length > MAX_POPUPS) next.shift();
+          return next;
+        });
+        blip();
+      },
+      Math.max(1200, 3200 - intensity * 400),
+    );
     return () => clearInterval(iv);
   }, [intensity]);
 
@@ -97,7 +100,11 @@ export default function PopupHell({ intensity }: { intensity: number }) {
         >
           <div
             className="flex items-center justify-between px-2 py-1 text-xs sm:text-sm font-bold"
-            style={{ background: p.hue, color: '#000', fontFamily: 'var(--font-metal)' }}
+            style={{
+              background: p.hue,
+              color: '#000',
+              fontFamily: 'var(--font-metal)',
+            }}
           >
             <span className="blinker">{p.title}</span>
             <button
@@ -108,21 +115,32 @@ export default function PopupHell({ intensity }: { intensity: number }) {
               X
             </button>
           </div>
-          <div className="p-3 text-xs sm:text-sm" style={{ fontFamily: 'var(--font-eaten)' }}>
+          <div
+            className="p-3 text-xs sm:text-sm"
+            style={{ fontFamily: 'var(--font-eaten)' }}
+          >
             {p.body}
           </div>
           <div className="flex gap-2 p-2 justify-center">
             <button
               onClick={() => close(p.id)}
               className="px-3 py-1 text-xs font-bold cursor-pointer hover:invert"
-              style={{ background: p.hue, color: '#000', fontFamily: 'var(--font-metal)' }}
+              style={{
+                background: p.hue,
+                color: '#000',
+                fontFamily: 'var(--font-metal)',
+              }}
             >
               ACCEPT FATE
             </button>
             <button
               onClick={() => close(p.id)}
               className="px-3 py-1 text-xs font-bold cursor-pointer hover:invert"
-              style={{ background: '#fff', color: '#000', fontFamily: 'var(--font-metal)' }}
+              style={{
+                background: '#fff',
+                color: '#000',
+                fontFamily: 'var(--font-metal)',
+              }}
             >
               ALSO ACCEPT FATE
             </button>

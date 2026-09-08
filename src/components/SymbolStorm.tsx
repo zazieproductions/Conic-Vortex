@@ -1,7 +1,41 @@
 import { useEffect, useState } from 'react';
 
-const CHARS = ['⛧', '⛥', '👁', '☠', '💀', '☥', '⚚', '☿', '♄', '♆', '🜏', '🜍', '🜚', '🕯', '🗝', '🔮', '🐐', '✦', '✴', '☽', '☉', '🩸', '🕷', '⚰'];
-const COLORS = ['#ff0000', '#00ff00', '#ffff00', '#ff00ff', '#00ffff', '#ff6600', '#ffffff', '#00ff99'];
+const CHARS = [
+  '⛧',
+  '⛥',
+  '👁',
+  '☠',
+  '💀',
+  '☥',
+  '⚚',
+  '☿',
+  '♄',
+  '♆',
+  '🜏',
+  '🜍',
+  '🜚',
+  '🕯',
+  '🗝',
+  '🔮',
+  '🐐',
+  '✦',
+  '✴',
+  '☽',
+  '☉',
+  '🩸',
+  '🕷',
+  '⚰',
+];
+const COLORS = [
+  '#ff0000',
+  '#00ff00',
+  '#ffff00',
+  '#ff00ff',
+  '#00ffff',
+  '#ff6600',
+  '#ffffff',
+  '#00ff99',
+];
 
 interface Sym {
   id: number;
@@ -15,7 +49,13 @@ interface Sym {
 }
 
 function randomSym(id: number): Sym {
-  const anims = ['spinFast 1s linear infinite', 'spinRev 0.7s linear infinite', 'zoomPulse 0.5s ease-in-out infinite alternate', 'shakeHard 0.15s linear infinite', 'blinkHard 0.4s steps(1) infinite'];
+  const anims = [
+    'spinFast 1s linear infinite',
+    'spinRev 0.7s linear infinite',
+    'zoomPulse 0.5s ease-in-out infinite alternate',
+    'shakeHard 0.15s linear infinite',
+    'blinkHard 0.4s steps(1) infinite',
+  ];
   return {
     id,
     char: CHARS[Math.floor(Math.random() * CHARS.length)],
@@ -31,7 +71,7 @@ function randomSym(id: number): Sym {
 export default function SymbolStorm({ intensity }: { intensity: number }) {
   const count = 30 + intensity * 12;
   const [syms, setSyms] = useState<Sym[]>(() =>
-    Array.from({ length: count }, (_, i) => randomSym(i))
+    Array.from({ length: count }, (_, i) => randomSym(i)),
   );
 
   useEffect(() => {
