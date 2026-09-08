@@ -1,24 +1,53 @@
 {
-  "name": "placeholder-model-2",
-  "private": true,
-  "version": "0.0.0",
+  "name": "conic-vortex",
+  "version": "0.3.0",
+  "description": "Y̷Y̶Y̸Y̵Y̷Y̶Y̸ — a real-time browser instrument for procedural audio-visual chaos: a hostile-interface glitch experience built with Three.js, Web Audio, React and CSS keyframe animation.",
   "type": "module",
+  "private": true,
+  "author": "Zazie Productions",
+  "license": "MIT",
+  "homepage": "https://github.com/zazieproductions/Conic-Vortex#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zazieproductions/Conic-Vortex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zazieproductions/Conic-Vortex/issues"
+  },
+  "keywords": [
+    "creative-coding",
+    "generative-art",
+    "webgl",
+    "threejs",
+    "web-audio",
+    "glitch-art",
+    "hostile-interface",
+    "react",
+    "vite",
+    "audio-visual",
+    "procedural"
+  ],
+  "engines": {
+    "node": ">=20.19.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "typecheck": "tsc -b",
     "preview": "vite preview",
     "lint": "eslint .",
-    "capture:screenshots": "node scripts/capture-screenshots.mjs"
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "capture:screenshots": "node scripts/capture-screenshots.mjs",
+    "validate": "npm run lint && npm run typecheck && npm run build"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",
-    "@types/three": "^0.185.4",
-    "framer-motion": "^12.35.0",
-    "lucide-react": "^0.577.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-router-dom": "^7.13.1",
-    "tailwindcss": "^4.2.1",
     "three": "^0.185.1"
   },
   "devDependencies": {
@@ -26,11 +55,14 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.185.4",
     "@vitejs/plugin-react": "^5.1.1",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^4.2.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.0",
     "vite": "^7.3.1"
