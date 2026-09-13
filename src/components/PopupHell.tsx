@@ -1,34 +1,18 @@
-import { useEffect, useState, useCallback } from 'react';
-import { blip, scream } from '../lib/noise';
-
-const TITLES = [
-  '⚠ MESSAGE FROM BEYOND ⚠',
-  '👁 SYSTEM32_SOUL.EXE 👁',
-  '⛧ URGENT RITUAL NOTICE ⛧',
-  '💀 FATAL EXCEPTION 0x666 💀',
-  '🐐 CONGRATULATIONS!!! 🐐',
-  '🕯 THE COUNCIL HAS DECIDED 🕯',
-  '☠ YOUR FREE TRIAL OF REALITY ☠',
-  '🔮 INCOMING TRANSMISSION 🔮',
-];
-
-const BODIES = [
-  'You are the 666,666th visitor. The Goat will contact you shortly.',
-  'ERROR: soul not found. Reinstall? (this cannot be undone)',
-  'The angles of this room are wrong. Do not look behind you.',
-  'Your reality license expires in 3... 2... 1...',
-  'HE WHO SCROLLS SHALL BE SCROLLED.',
-  'A sigil has been drawn using your cursor history.',
-  'Warning: perceiving this popup binds you contractually to the void.',
-  'The seventh Y has awakened. There is no eighth Y.',
-  'Your bones have been selected for a wonderful opportunity.',
-  'DO NOT CLOSE THIS WINDOW. (closing summons two more)',
-];
-
-const HUES = ['#ff0055', '#00ff66', '#ffee00', '#ff00ff', '#00ffff', '#ff6600'];
+/**
+ * components/PopupHell.tsx
+ * The "popup hell" subsystem: fake windows that spawn at intervals and
+ * reproduce on close ("hydra rule" – closing one spawns two).
+ *
+ * Spawn rate scales inversely with global intensity so more chaos = more
+ * frequent popups.
+ */
+import { useCallback, useEffect, useState } from 'react';
+import { blip, scream } from '../audio/engine';
+import { POPUP_BODIES, POPUP_HUES, POPUP_TITLES } from '../data/popups';
+import { uid } from '../utils/id';
 
 interface Popup {
-  id: number;
+  id: string;
   x: number;
   y: number;
   title: string;
@@ -37,26 +21,30 @@ interface Popup {
   rot: number;
 }
 
-let popupId = 0;
-
 function makePopup(): Popup {
   return {
-    id: popupId++,
+    id: uid('pop'),
     x: 5 + Math.random() * 60,
     y: 8 + Math.random() * 55,
-    title: TITLES[Math.floor(Math.random() * TITLES.length)],
-    body: BODIES[Math.floor(Math.random() * BODIES.length)],
-    hue: HUES[Math.floor(Math.random() * HUES.length)],
+    title: POPUP_TITLES[Math.floor(Math.random() * POPUP_TITLES.length)],
+    body: POPUP_BODIES[Math.floor(Math.random() * POPUP_BODIES.length)],
+    hue: POPUP_HUES[Math.floor(Math.random() * POPUP_HUES.length)],
     rot: (Math.random() - 0.5) * 14,
   };
 }
 
+/** Hard cap so we don't devolve into a browser-crash singularity. */
 const MAX_POPUPS = 7;
 
-export default function PopupHell({ intensity }: { intensity: number }) {
-  const [popups, setPopups] = useState<Popup[]>([makePopup()]);
+interface PopupHellProps {
+  intensity: number;
+}
+
+export default function PopupHell({ intensity }: PopupHellProps) {
+  const [popups, setPopups] = useState<Popup[]>(() => [makePopup()]);
 
   useEffect(() => {
+    const intervalMs = Math.max(1200, 3200 - intensity * 400);
     const iv = setInterval(() => {
       setPopups((prev) => {
         const next = [...prev, makePopup()];
@@ -64,15 +52,15 @@ export default function PopupHell({ intensity }: { intensity: number }) {
         return next;
       });
       blip();
-    }, Math.max(1200, 3200 - intensity * 400));
+    }, intervalMs);
     return () => clearInterval(iv);
   }, [intensity]);
 
-  const close = useCallback((id: number) => {
+  const close = useCallback((id: string) => {
     scream();
     setPopups((prev) => {
       const next = prev.filter((p) => p.id !== id);
-      // hydra rule: closing one spawns two
+      // Hydra rule: closing one window summons two more.
       next.push(makePopup());
       if (next.length < MAX_POPUPS) next.push(makePopup());
       while (next.length > MAX_POPUPS) next.shift();
@@ -81,7 +69,7 @@ export default function PopupHell({ intensity }: { intensity: number }) {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-40 pointer-events-none">
+    <div className="fixed inset-0 z-40 pointer-events-none" aria-hidden="true">
       {popups.map((p) => (
         <div
           key={p.id}
@@ -94,6 +82,7 @@ export default function PopupHell({ intensity }: { intensity: number }) {
             background: '#000',
             border: `4px ridge ${p.hue}`,
           }}
+          role="dialog"
         >
           <div
             className="flex items-center justify-between px-2 py-1 text-xs sm:text-sm font-bold"
@@ -102,6 +91,7 @@ export default function PopupHell({ intensity }: { intensity: number }) {
             <span className="blinker">{p.title}</span>
             <button
               onClick={() => close(p.id)}
+              aria-label="Dismiss summons two more"
               className="ml-2 px-2 border-2 border-black bg-white text-black hover:bg-red-600 hover:text-white cursor-pointer font-black"
               style={{ fontFamily: 'monospace' }}
             >

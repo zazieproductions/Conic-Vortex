@@ -1,48 +1,33 @@
-import { useState, useEffect, useCallback } from 'react';
-import ThreeChaos from './components/ThreeChaos';
-import MarqueeLayer from './components/MarqueeLayer';
-import SymbolStorm from './components/SymbolStorm';
-import PopupHell from './components/PopupHell';
+/**
+ * App.tsx
+ * ---------------------------------------------------------------------------
+ * Top-level orchestrator. Owns global state (entry gate, intensity, mute,
+ * inverted world, visitor counter) and composes the stacked visual + audio
+ * layers in z-order.
+ *
+ * Layer order (bottom -> top):
+ *   0. Strobe / checker / spiral backgrounds
+ *   1. ThreeChaos (WebGL vortex)
+ *   2. SymbolStorm (glyph field)
+ *   3. Giant rotating sigils (DOM <img>)
+ *   4. MarqueeLayer (scrolling strips)
+ *   5. Centre title + visitor counter
+ *   6. PopupHell (fake windows)
+ *   7. EscapeButton (fleeing)
+ *   8. Overlays (flash, vhs lines)
+ *   9. CursorTrail
+ *  10. ControlAltar (bottom-centre buttons)
+ * ---------------------------------------------------------------------------
+ */
+import { useCallback, useEffect, useState } from 'react';
+import { initAudio, blip, scream, toggleMute } from './audio/engine';
 import CursorTrail from './components/CursorTrail';
 import EscapeButton from './components/EscapeButton';
-import { initAudio, blip, toggleMute, scream } from './lib/noise';
-
-function WarningGate({ onEnter }: { onEnter: () => void }) {
-  return (
-    <div className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center gap-8 p-6 text-center warning-border border-[12px]">
-      <div
-        className="text-red-600 text-3xl sm:text-5xl blinker"
-        style={{ fontFamily: 'var(--font-drip)' }}
-      >
-        ⚠ WARNING ⚠
-      </div>
-      <div
-        className="text-yellow-300 max-w-xl text-sm sm:text-lg leading-relaxed"
-        style={{ fontFamily: 'var(--font-metal)' }}
-      >
-        THIS SITE CONTAINS RAPIDLY FLASHING LIGHTS, STROBING COLORS, LOUD PROCEDURAL
-        NOISE, AND AGGRESSIVE MOTION. NOT SUITABLE FOR PHOTOSENSITIVE VISITORS,
-        THE FAINT OF HEART, OR THE SANE.
-      </div>
-      <div
-        className="text-cyan-400 text-xs sm:text-sm"
-        style={{ fontFamily: 'var(--font-eaten)' }}
-      >
-        by entering you agree that your cursor becomes a ritual implement
-      </div>
-      <button
-        onClick={onEnter}
-        className="px-10 py-4 text-2xl sm:text-4xl cursor-pointer bg-red-700 text-white border-4 border-double border-yellow-300 hover:bg-yellow-300 hover:text-red-700 zoom-pulse"
-        style={{ fontFamily: 'var(--font-fraktur)', boxShadow: '0 0 60px #ff0000' }}
-      >
-        ENTER THE VOID
-      </button>
-      <div className="text-white/40 text-xs" style={{ fontFamily: 'monospace' }}>
-        [ inspired by the sacred chaos of yyyyyyy ]
-      </div>
-    </div>
-  );
-}
+import MarqueeLayer from './components/MarqueeLayer';
+import PopupHell from './components/PopupHell';
+import SymbolStorm from './components/SymbolStorm';
+import ThreeChaos from './components/ThreeChaos';
+import WarningGate from './components/WarningGate';
 
 export default function App() {
   const [entered, setEntered] = useState(false);
@@ -51,6 +36,8 @@ export default function App() {
   const [muted, setMuted] = useState(false);
   const [counter, setCounter] = useState(666666);
 
+  // Visitor counter – increments with a randomised stride every 1.8s after entry,
+  // occasionally chirping a blip for texture.
   useEffect(() => {
     if (!entered) return;
     const iv = setInterval(() => {
@@ -70,6 +57,23 @@ export default function App() {
     blip();
   }, []);
 
+  const handleInvert = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    scream();
+    setInverted((v) => !v);
+  }, []);
+
+  const handleMoreChaos = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    scream();
+    setIntensity((i) => (i >= 5 ? 1 : i + 1));
+  }, []);
+
+  const handleToggleMute = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setMuted(toggleMute());
+  }, []);
+
   if (!entered) return <WarningGate onEnter={enter} />;
 
   return (
@@ -78,12 +82,13 @@ export default function App() {
       onClick={handleGlobalClick}
     >
       {/* LAYER 0: strobing background */}
-      <div className="fixed inset-0 strobe-bg" />
-      <div className="fixed inset-0 checker-bg" />
+      <div className="fixed inset-0 strobe-bg" aria-hidden="true" />
+      <div className="fixed inset-0 checker-bg" aria-hidden="true" />
 
       {/* spinning conic vortex behind everything */}
       <div
         className="spiral-bg fixed pointer-events-none"
+        aria-hidden="true"
         style={{
           width: '160vmax',
           height: '160vmax',
@@ -106,6 +111,7 @@ export default function App() {
         src="/sprites/eye.png"
         alt=""
         className="giant-sigil z-20"
+        aria-hidden="true"
         style={{
           width: '55vmin',
           left: '50%',
@@ -119,6 +125,7 @@ export default function App() {
         src="/sprites/goat.png"
         alt=""
         className="giant-sigil z-20"
+        aria-hidden="true"
         style={{
           width: '38vmin',
           left: '4%',
@@ -130,6 +137,7 @@ export default function App() {
         src="/sprites/sun.png"
         alt=""
         className="giant-sigil z-20"
+        aria-hidden="true"
         style={{
           width: '34vmin',
           right: '3%',
@@ -146,12 +154,16 @@ export default function App() {
         <h1
           className="rainbow-text glitch-clip text-[13vw] leading-none"
           style={{ fontFamily: 'var(--font-glitch)' }}
+          aria-label="Y Y Y Y Y Y Y – the machine god is awake"
         >
           Y̷Y̶Y̸Y̵Y̷Y̶Y̸
         </h1>
         <div
           className="shake-hard text-white text-[3vw] mt-2"
-          style={{ fontFamily: 'var(--font-fraktur)', textShadow: '0 0 20px #ff00ff, 4px 4px 0 #000' }}
+          style={{
+            fontFamily: 'var(--font-fraktur)',
+            textShadow: '0 0 20px #ff00ff, 4px 4px 0 #000',
+          }}
         >
           𝔱𝔥𝔢 𝔪𝔞𝔠𝔥𝔦𝔫𝔢 𝔤𝔬𝔡 𝔦𝔰 𝔞𝔴𝔞𝔨𝔢
         </div>
@@ -170,41 +182,37 @@ export default function App() {
       <EscapeButton />
 
       {/* LAYER 5: overlays */}
-      <div className="fixed inset-0 z-[60] flash-overlay" />
-      <div className="fixed inset-0 z-[61] vhs-lines" />
+      <div className="fixed inset-0 z-[60] flash-overlay" aria-hidden="true" />
+      <div className="fixed inset-0 z-[61] vhs-lines" aria-hidden="true" />
 
       {/* cursor trail */}
       <CursorTrail />
 
       {/* CONTROL ALTAR */}
-      <div className="fixed bottom-2 left-1/2 -translate-x-1/2 z-[70] flex flex-wrap gap-2 justify-center">
+      <div
+        className="fixed bottom-2 left-1/2 -translate-x-1/2 z-[70] flex flex-wrap gap-2 justify-center"
+        role="toolbar"
+        aria-label="Chaos controls"
+      >
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            scream();
-            setInverted((v) => !v);
-          }}
+          onClick={handleInvert}
+          aria-label="Invert reality"
           className="px-3 py-2 text-xs sm:text-sm font-bold cursor-pointer bg-black text-red-500 border-2 border-red-500 hover:bg-red-500 hover:text-black shake-hard"
           style={{ fontFamily: 'var(--font-metal)' }}
         >
           ☠ DO NOT CLICK ☠
         </button>
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            scream();
-            setIntensity((i) => (i >= 5 ? 1 : i + 1));
-          }}
+          onClick={handleMoreChaos}
+          aria-label={`Increase chaos intensity, currently level ${intensity} of 5`}
           className="px-3 py-2 text-xs sm:text-sm font-bold cursor-pointer bg-fuchsia-600 text-black border-2 border-white hover:invert"
           style={{ fontFamily: 'var(--font-metal)' }}
         >
           ⛧ MORE CHAOS [{intensity}/5] ⛧
         </button>
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setMuted(toggleMute());
-          }}
+          onClick={handleToggleMute}
+          aria-label={muted ? 'Unmute audio' : 'Mute audio'}
           className="px-3 py-2 text-xs sm:text-sm font-bold cursor-pointer bg-yellow-300 text-black border-2 border-black hover:invert"
           style={{ fontFamily: 'var(--font-metal)' }}
         >

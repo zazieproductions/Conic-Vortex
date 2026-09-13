@@ -1,10 +1,14 @@
+/**
+ * components/SymbolStorm.tsx
+ * A roiling field of occult glyphs that teleport, spin, blink and shake.
+ * Density scales with the global `intensity` level (1–5).
+ */
 import { useEffect, useState } from 'react';
-
-const CHARS = ['⛧', '⛥', '👁', '☠', '💀', '☥', '⚚', '☿', '♄', '♆', '🜏', '🜍', '🜚', '🕯', '🗝', '🔮', '🐐', '✦', '✴', '☽', '☉', '🩸', '🕷', '⚰'];
-const COLORS = ['#ff0000', '#00ff00', '#ffff00', '#ff00ff', '#00ffff', '#ff6600', '#ffffff', '#00ff99'];
+import { STORM_CHARS, NEON_PALETTE, STORM_ANIMATIONS } from '../data/symbols';
+import { uid } from '../utils/id';
 
 interface Sym {
-  id: number;
+  id: string;
   char: string;
   x: number;
   y: number;
@@ -14,38 +18,41 @@ interface Sym {
   anim: string;
 }
 
-function randomSym(id: number): Sym {
-  const anims = ['spinFast 1s linear infinite', 'spinRev 0.7s linear infinite', 'zoomPulse 0.5s ease-in-out infinite alternate', 'shakeHard 0.15s linear infinite', 'blinkHard 0.4s steps(1) infinite'];
+function randomSym(): Sym {
   return {
-    id,
-    char: CHARS[Math.floor(Math.random() * CHARS.length)],
+    id: uid('sym'),
+    char: STORM_CHARS[Math.floor(Math.random() * STORM_CHARS.length)],
     x: Math.random() * 96,
     y: Math.random() * 94,
     size: 18 + Math.random() * 70,
     rot: Math.random() * 360,
-    color: COLORS[Math.floor(Math.random() * COLORS.length)],
-    anim: anims[Math.floor(Math.random() * anims.length)],
+    color: NEON_PALETTE[Math.floor(Math.random() * NEON_PALETTE.length)],
+    anim: STORM_ANIMATIONS[Math.floor(Math.random() * STORM_ANIMATIONS.length)],
   };
 }
 
-export default function SymbolStorm({ intensity }: { intensity: number }) {
+interface SymbolStormProps {
+  /** Global chaos intensity 1–5. */
+  intensity: number;
+}
+
+export default function SymbolStorm({ intensity }: SymbolStormProps) {
   const count = 30 + intensity * 12;
-  const [syms, setSyms] = useState<Sym[]>(() =>
-    Array.from({ length: count }, (_, i) => randomSym(i))
-  );
+
+  const [syms, setSyms] = useState<Sym[]>(() => Array.from({ length: count }, () => randomSym()));
 
   useEffect(() => {
     const iv = setInterval(() => {
       setSyms((prev) => {
         const next = [...prev];
-        // teleport a random third of them
+        // Teleport a random third of them each tick
         for (let k = 0; k < Math.ceil(next.length / 3); k++) {
           const idx = Math.floor(Math.random() * next.length);
-          next[idx] = randomSym(next[idx].id);
+          next[idx] = randomSym();
         }
-        // grow/shrink to match intensity
+        // Grow or shrink the pool to match current intensity
         const target = 30 + intensity * 12;
-        while (next.length < target) next.push(randomSym(Date.now() + next.length));
+        while (next.length < target) next.push(randomSym());
         while (next.length > target) next.pop();
         return next;
       });
@@ -54,7 +61,7 @@ export default function SymbolStorm({ intensity }: { intensity: number }) {
   }, [intensity]);
 
   return (
-    <div className="fixed inset-0 z-20 pointer-events-none overflow-hidden">
+    <div className="fixed inset-0 z-20 pointer-events-none overflow-hidden" aria-hidden="true">
       {syms.map((s) => (
         <span
           key={s.id}

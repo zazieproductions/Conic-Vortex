@@ -1,4 +1,4 @@
-# Logs
+# ---- Logs ----
 logs
 *.log
 npm-debug.log*
@@ -7,20 +7,38 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# ---- Dependencies & build ----
 node_modules
 dist
 dist-ssr
+build
+coverage
 *.local
 
-# Editor directories and files
+# ---- Editor / OS ----
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settings.json
 .idea
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# ---- Arena / sandbox-only artifacts ----
+# These files are injected by the Arena preview environment and must not be
+# committed back to the repository.
 .vite-source-tags.js
+
+# ---- Hosting / deployment ----
 .vercel
+.netlify
+.firebase
+
+# ---- Env ----
+.env
+.env.*
+!.env.example

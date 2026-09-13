@@ -1,32 +1,56 @@
 <svg width="1280" height="640" viewBox="0 0 1280 640" xmlns="http://www.w3.org/2000/svg">
   <!-- Background: deep black -->
-  <rect width="1280" height="640" fill="#000000"/>
-  
+  <rect width="1280" height="640" fill="#000000" />
+
   <!-- Decorative conic gradient at top -->
   <defs>
     <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ff0000"/>
-      <stop offset="50%" stop-color="#ff8800"/>
-      <stop offset="100%" stop-color="#ffff00"/>
+      <stop offset="0%" stop-color="#ff0000" />
+      <stop offset="50%" stop-color="#ff8800" />
+      <stop offset="100%" stop-color="#ffff00" />
     </linearGradient>
   </defs>
-  
+
   <!-- Central Y̷Y̶Y̸Y̵Y̷Y̶Y̸ text -->
-  <text x="640" y="280" font-family="UnifrakturMaguntia, serif" font-size="180" fill="#ff0000" text-anchor="middle" dominant-baseline="middle">
+  <text
+    x="640"
+    y="280"
+    font-family="UnifrakturMaguntia, serif"
+    font-size="180"
+    fill="#ff0000"
+    text-anchor="middle"
+    dominant-baseline="middle"
+  >
     Y̷Y̶Y̸Y̵Y̷Y̶Y̸
   </text>
-  
+
   <!-- Descriptor line -->
-  <text x="640" y="340" font-family="Metal Mania, serif" font-size="48" fill="#00ffff" text-anchor="middle" dominant-baseline="middle">
+  <text
+    x="640"
+    y="340"
+    font-family="Metal Mania, serif"
+    font-size="48"
+    fill="#00ffff"
+    text-anchor="middle"
+    dominant-baseline="middle"
+  >
     Experimental browser instrument · Audiovisual signal processing · Hostile interface design
   </text>
-  
+
   <!-- Zazie Productions -->
-  <text x="640" y="500" font-family="UnifrakturMaguntia, serif" font-size="32" fill="#ff00ff" text-anchor="middle" dominant-baseline="middle">
+  <text
+    x="640"
+    y="500"
+    font-family="UnifrakturMaguntia, serif"
+    font-size="32"
+    fill="#ff00ff"
+    text-anchor="middle"
+    dominant-baseline="middle"
+  >
     Zazie Productions
   </text>
-  
+
   <!-- Decorative lines -->
-  <line x1="100" y1="400" x2="1180" y2="400" stroke="#ff0000" stroke-width="1"/>
-  <line x1="100" y1="420" x2="1180" y2="420" stroke="#00ffff" stroke-width="1"/>
+  <line x1="100" y1="400" x2="1180" y2="400" stroke="#ff0000" stroke-width="1" />
+  <line x1="100" y1="420" x2="1180" y2="420" stroke="#00ffff" stroke-width="1" />
 </svg>

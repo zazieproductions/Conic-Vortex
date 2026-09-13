@@ -1,102 +1,98 @@
 # Contributing to Y̷Y̶Y̸Y̵Y̷Y̶Y̸
 
-Thank you for considering contributing to this creative technology project! This repository is maintained by Zazie Productions and represents a unique blend of artistic vision and engineering.
+Thank you for considering contributing to this creative-technology project!
+Y̷Y̶Y̸Y̵Y̷Y̶Y̸ is maintained by [Zazie Productions](https://github.com/zazieproductions)
+and is a deliberate hybrid of artistic vision and engineering.
 
-## Contribution Workflow
+## The golden rule
 
-### 1. Fork the Repository
-Fork the project on GitHub and clone your fork locally.
+> **Preserve the weirdness.**
+>
+> We welcome refactors, performance work, accessibility improvements,
+> documentation, new subsystems, and creative extensions. We will not
+> merge changes that pastel-wash the aesthetic, remove the warning gate,
+> silence the audio by default, or turn the piece into a generic SaaS
+> landing page.
+
+## Workflow
+
+1. **Fork** the repository on GitHub and clone your fork.
+
+   ```bash
+   git clone https://github.com/your-username/Conic-Vortex.git
+   cd Conic-Vortex
+   ```
+
+2. **Create a branch** off `main`.
+
+   ```bash
+   git checkout -b feat/your-feature-name
+   # or
+   git checkout -b fix/your-bug-description
+   ```
+
+3. **Set up** your environment:
+
+   ```bash
+   npm install
+   npm run dev          # confirm it boots
+   npm run validate     # must pass on a clean checkout
+   ```
+
+4. **Make your changes**, following the
+   [coding conventions](docs/development/workflow.md#coding-conventions):
+   - TypeScript strict mode; no `any` without an explanatory comment.
+   - One subsystem per file; content constants live in `src/data/`.
+   - Every `useEffect` that allocates (intervals, RAF, event listeners,
+     WebGL resources) returns a cleanup.
+   - Don't genericise the aesthetic. The strobes, the jarring palette,
+     the blackletter/glitch fonts, the "hostile" UX — all intentional.
+
+5. **Manual QA checklist:**
+   - [ ] The warning gate is shown first and is reachable by keyboard.
+   - [ ] Clicking **ENTER THE VOID** starts the drone and scream.
+   - [ ] All three control-altar buttons work (invert, more chaos, mute).
+   - [ ] Closing a popup summons two more (hydra rule).
+   - [ ] The escape button still flees on hover.
+   - [ ] Cursor trail follows the mouse.
+   - [ ] Resizing the window doesn't break the Three.js scene.
+   - [ ] `npm run validate` passes.
+
+6. **Document** any new subsystem under `docs/` — see
+   `docs/architecture/`, `docs/audio/`.
+
+7. **Commit** with a clear message. Prefer conventional-commit style but
+   clarity beats ritual.
+
+   ```bash
+   git add .
+   git commit -m "feat(popup): add red-pulse on spawn"
+   ```
+
+8. **Push** and open a pull request against `main`. In the PR
+   description, cover:
+   - What changed and why.
+   - How it preserves (or extends) the project's artistic intent.
+   - Any new dependencies added and why they are justified.
+   - Screenshots / clips for visual changes if practical.
+
+## Opening issues
+
+- **Bug reports:** use the bug-report template and include browser/OS,
+  GPU if relevant, and reproduction steps.
+- **Feature ideas:** open an issue with the `enhancement` label —
+  explain the creative motivation, not just "add X".
+- **Security:** see [SECURITY.md](SECURITY.md) for responsible disclosure.
+
+## Development quick reference
 
 ```bash
-git clone https://github.com/your-username/Conic-Vortex.git
-cd Conic-Vortex
+npm run dev             # Vite + HMR
+npm run validate        # typecheck + lint + format:check + build
+npm run format          # auto-format with Prettier
+npm run assets:generate # regenerate the public/sprites/*.png sigils
+npm run screenshots     # Puppeteer stills (needs a running dev server)
 ```
 
-### 2. Create a Branch
-Create a new branch for your feature or bug fix.
-
-```bash
-git checkout -b feature/your-feature-name
-# or
-git checkout -b fix/your-bug-description
-```
-
-### 3. Set Up Development Environment
-
-```bash
-# Install dependencies
-npm ci
-
-# Run the development server
-npm run dev
-
-# Verify linting passes
-npm run lint
-
-# Verify type checking passes
-npx tsc -b
-```
-
-### 4. Make Your Changes
-- Follow the existing code style and conventions
-- Add appropriate comments explaining the WHY of your changes
-- Preserve the project's artistic aesthetic and conceptual integrity
-- Do not genericize or "startup-ify" the project's distinctive qualities
-- Keep the warning gate and accessibility considerations in mind
-
-### 5. Test Your Changes
-- Verify the project still launches and the warning gate works
-- Check that all existing subsystems (3D chaos, symbol storm, popups, audio) function correctly
-- Test intensity toggles, mute toggle, color invert
-- Ensure the Escape button flees correctly
-- Verify the control altar buttons work
-
-### 6. Commit Your Changes
-```bash
-git add .
-git commit -m "your descriptive commit message
-```
-
-### 7. Push and Open a Pull Request
-```bash
-git push origin feature/your-feature-name
-```
-Navigate to your fork on GitHub and open a Pull Request against the main `arena/01a06540-conic-vortex` branch.
-
-## Development Guidelines
-
-### Artistic Integrity
-This project has a distinct aesthetic and conceptual vocabulary — damaged systems, cybernetic instruments, archival interfaces, signal decay, hostile information architecture. When adding features or refactoring:
-
-- **Preserve the eccentricities** — do not smooth over the project's strange qualities
-- **Serve the artistic concept** — every technical decision should support the creative vision
-- **Avoid startup branding** — no pastel color schemes, no sterile "designer" aesthetics, no generic developer portfolio language
-- **Keep the warnings** — the photosensitive warning gate must remain
-
-### Technical Standards
-- TypeScript type safety — no `any` types unless absolutely necessary
-- ESLint — all new code must pass `npm run lint`
-- Type check — `npx tsc -b` must pass without errors
-- No build breakages — `npm run build` must produce clean output
-- Keep dependencies updated but don't remove core aesthetic systems
-
-### Branching Model
-- All work happens on `arena/01a06540-conic-vortex` (this session's branch)
-- Feature branches should be created from `arena/01a06540-conic-vortex`
-- Pull requests merge into `arena/01a06540-conic-vortex`
-- Commits should be signed and descriptive
-
-### Submitting Changes
-1. Ensure all tests pass (lint, typecheck, build)
-2. Update README.md if your changes affect configuration or setup
-3. Update ARCHITECTURE.md if you add new subsystems
-4. Open a Pull Request with a clear description of:
-   - What changed
-   - Why it changed
-   - How it preserves the project's artistic integrity
-   - Any new dependencies added
-
-### Questions or Discussion?
-- Open an issue on the GitHub repository
-- Contact the maintainers directly
-- Check the [ARCHITECTURE.md](ARCHITECTURE.md) for system-level context
+The full development guide is in
+[docs/development/workflow.md](docs/development/workflow.md).
